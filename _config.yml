@@ -1,4 +1,4 @@
-theme: jekyll-theme-minimal
+layout: default
 encoding: UTF-8
-markdown: kramdown
-usemathjax: true
+markdown: maruku
+use_math: true
