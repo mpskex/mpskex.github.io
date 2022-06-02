@@ -1,15 +1,3 @@
-<head>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <!-- <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            tex2jax: {
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            inlineMath: [['$','$']]
-            }
-        });
-    </script> -->
-</head>
-
 # 经典 Weierstrass 极值定理
 
 ### 基本定义与定理
@@ -93,7 +81,7 @@ $$
 
 首先我们面对由定义域的函数 $f|_C$，将其转化为 $f+\delta_C$。目标就是证明 $f+\delta_C$ 是**闭合强制的纯函数**，以利用之前证明的极值存在定理来证明这个定理。
 
-**（闭合性）**因为 $f$ 和 $\delta_C$ 都是闭合函数，我们先记 $f(x)+\delta_C(x) := (f+\delta_C)(x)$，那么有 
+**（闭合性）** 因为 $f$ 和 $\delta_C$ 都是闭合函数，我们先记 $f(x)+\delta_C(x) := (f+\delta_C)(x)$，那么有 
 
 $$
 f(x)+\delta_C(x)\le\liminf f(x_n)+\liminf \delta_C(x_n)\le \liminf \Big((f+\delta_C)(x)\Big)
@@ -101,9 +89,9 @@ $$
 
 所以我们可知 $(f+\delta_C)$ 是**下半连续**的，也就是闭合的。
 
-**（强制性）**当 $\|x\|\to\infty$，$(f+\delta_C)(x)\to\infty$。因为集合 $C$ 是闭合且有界的，所以超出闭合定义域的值会被指示函数顶到 $\infty$。
+**（强制性）** 当 $\|x\|\to\infty$，$(f+\delta_C)(x)\to\infty$。因为集合 $C$ 是闭合且有界的，所以超出闭合定义域的值会被指示函数顶到 $\infty$。
 
-**（纯性）**$\operatorname{dom}(f+\delta_C) = \operatorname{dom}f \cap \operatorname{dom}\delta_C = \operatorname{dom}f + C \ne \phi$，所以纯性得到了保证。
+**（纯性）** $\operatorname{dom}(f+\delta_C) = \operatorname{dom}f \cap \operatorname{dom}\delta_C = \operatorname{dom}f + C \ne \phi$，所以纯性得到了保证。
 
 因此函数 $f+\delta_C$ 是**闭合强制的纯函数**，根据**极值存在定理**，我们可以得到该函数存在一个极小值。$\blacksquare$
 
