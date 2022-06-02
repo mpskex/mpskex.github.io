@@ -1,13 +1,13 @@
 <head>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
+    <!-- <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             tex2jax: {
             skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
             inlineMath: [['$','$']]
             }
         });
-    </script>
+    </script> -->
 </head>
 
 # 经典 Weierstrass 极值定理
@@ -26,7 +26,7 @@
     f(x)\le\lim_{k\to\infty}\inf{f(x_k)} \qquad \forall x_k\to x \text{ and } \{x_k\}\subset X
     $$
     
-    ![（上半连续 + 下半连续 = 连续）](https://mpskex.github.io/imgs/lsc_demonstration.jpeg)
+    ![（上半连续 + 下半连续 = 连续）](https://mpskex.github.io/imgs/lsc_demonstration.png)
     
 6. 强制性 (coercive) ：可以理解为是函数在轴两侧都是奔向无穷的。
 $$
@@ -47,7 +47,7 @@ $$
 
 **声明**： $(x_n)$ 有一个有界的子序列。
 
-~~（*为了证明上面的声明是正确的，我们需要使用 反证法 来证明。这部分可能会有点绕）*~~
+（*为了证明上面的声明是正确的，我们需要使用 反证法 来证明。这部分可能会有点绕）*
 
 ***假设*** 上面的的声明不正确，也就是说 $(x_n)$ 没有一个有界的子序列，则 $(x_n)$ 不是有界的。根据 **强制性(coercive)** ，对于 $\|x_n\|\to\infty$，我们有 $f(x_n)\to\infty$；
 
