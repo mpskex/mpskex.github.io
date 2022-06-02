@@ -1,4 +1,4 @@
 layout: default
 encoding: UTF-8
-markdown: maruku
+markdown: kramdown
 use_math: true
