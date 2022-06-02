@@ -1,5 +1,7 @@
+{% if page.use_math %}
+{% include mathjax_support.html %}
+{% endif %}
 # 经典 Weierstrass 极值定理
-
 ### 基本定义与定理
 
 本节我们会介绍一些基本定义和概念，包括什么是凸函数，什么是有界、闭合、紧致。同时我们还会回顾一些连续性的相关定义，以方便我们去证明后续的一些定理。
