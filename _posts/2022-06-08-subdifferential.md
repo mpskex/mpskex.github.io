@@ -1,6 +1,17 @@
-# 次梯度及其性质
+---
+layout: post
+title:  "次梯度及其性质"
+date:   2022-06-08 14:11:07 +0800
+author: Fangrui Liu
+categories: convex-optimization
+tags: math convex-optimization
+---
+
+{% include mathjax_support.html %}
 
 本节我们主要来简单介绍一下什么是 **次梯度 （Subgradient）**。实际上，**次梯度** 就是更加泛化的**梯度（Gradient）**概念：对于一些特定的不可微函数，我们仍然可以找到一个类似梯度的定义来描述函数值变化的程度。这样就把我们的分析对象从可微函数扩展到了**真函数 （proper）**上了。
+
+<!--more-->
 
 NB：关于次梯度的标记 （notation）在学术界还有歧义。我们遵循 [Amir Beck](https://scholar.google.com.hk/citations?hl=en&user=KMpBQcIAAAAJ) 的 [First Order Methods in Optimization](http://archive.siam.org/books/mo25/) 中的 $\partial f$ 来标记次梯度。
 
@@ -63,3 +74,5 @@ $$
 故 $\partial f$ 是闭合且凸的函数。 $\blacksquare$
 
 本节内容不是很多，只是大概回顾了一下次梯度的概念。下一节我们会继续介绍 **方向导数 (Directional Derivatives)** 的概念。
+
+[返回首页](/)

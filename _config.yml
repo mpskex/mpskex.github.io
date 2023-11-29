@@ -2,3 +2,4 @@ theme: jekyll-theme-minimal
 encoding: UTF-8
 markdown: kramdown
 use_math: true
+excerpt_separator: <!--more-->

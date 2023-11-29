@@ -1,4 +1,11 @@
-## Fangrui Liu
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: default
+title: Fangrui Liu
+---
+
 ![img](https://mpskex.github.io/imgs/bio.jpeg)
 
     Computer Vision, Machine Learning, Optimization, FPGA
@@ -32,16 +39,18 @@ Experienced Data Scientist with a demonstrated history of working in the informa
 
 ### Blogs
 
+All Blogs [Here](blog.html)
+
 ***Convex Optimization in Chinese***
 
-- [经典 Weierstrass 极值定理](Classical_Weierstrass)
-- [凸函数与 Hilbert 投影定理](Convex_Hilbert)
-- [方向导数、极大值定理 和 可微性](DireDiff_Maximal_Diff)
-- [次梯度及其性质](SubDiff)
+- [经典 Weierstrass 极值定理](/convex-optimization/2022/06/02/classical-weierstrass.html)
+- [凸函数与 Hilbert 投影定理](/convex-optimization/2022/06/04/hibert-projection.html)
+- [次梯度及其性质](/convex-optimization/2022/06/08/subdifferential.html)
+- [方向导数、极大值定理 和 可微性](/convex-optimization/2023/06/29/directional-derivatives.html)
 
 ***Paper Readings in Chinese***
 
-- [深入理解 ScaNN ](ScaNN)
+- [深入理解 ScaNN ](/paper-reading/2022/12/06/scann-proof.html)
 
 ***Tech Writing at MyScale***
 

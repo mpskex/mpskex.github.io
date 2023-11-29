@@ -1,8 +1,16 @@
-# 深入理解 ScaNN 
+---
+layout: post
+title:  "深入理解 ScaNN "
+date:   2022-12-06 18:01:07 +0800
+author: Fangrui Liu
+categories: paper-reading
+tags: math vector-search
+---
 
+{% include mathjax_support.html %}
 
 作为近年在 InnerProduct ANNS 任务上的 SOTA，Google 的这篇 [ScaNN](http://proceedings.mlr.press/v119/guo20h/guo20h.pdf) 包含了这几年来在为 ANNS 服务的向量量化方面研究相关工作的一些经典思想。所以我们在这里也希望能站在巨人肩膀上看世界，清晰了解 ScaNN 的技术细节。
-
+<!--more-->
 本片工作主要作用于 MIPS（Maximum Inner Product Search），当然我们可以把很多搜索问题都归结于最大内积搜索上。
 
 1. 最小欧氏距离搜索：$\|a-b\|^2:=\|a\|^2-2\langle a,b\rangle + \|b\|^2$
@@ -20,6 +28,7 @@
 通常来讲，量化的目标都是在减少内积在量化前后的误差。具体可以写作：
 
 $$\mathbb{E}_q\sum_{i=1}^n\Big(\langle q,x_i\rangle - \langle q, \tilde{x_i}\rangle\Big)^2=\mathbb{E}_q\sum_{i=1}^n\Big(\langle q,x_i- \tilde{x_i}\rangle\Big)^2$$
+
 当然我们可以假设这里的 $q$ 是[各向同性的（isotropic）](https://en.wikipedia.org/wiki/Isotropic_position)。也就是说 $\mathbb{E}_q[qq^T]=cI$。那么进一步化简就可以得到 
 
 $$\begin{aligned} \mathbb{E}_q\sum_{i=1}^n\Big(\langle q,x_i- \tilde{x_i}\rangle\Big)^2&=\sum_{i=1}^{n}\mathbb{E}_q(x_i-\tilde{x_i})^Tqq^T(x_i-\tilde{x_i})\\ \text{With respect to }&\mathbb{E}_q[qq^T]=cI\text{,}\\ &=c\sum_{i=1}^n\|x_i-\tilde{x_i}\|^2 \end{aligned}$$
@@ -28,13 +37,13 @@ $$\begin{aligned} \mathbb{E}_q\sum_{i=1}^n\Big(\langle q,x_i- \tilde{x_i}\rangle
 
 ## Score-Aware Quantization Loss
 
-![Original image from the paper](imgs/scann_paper.jpg)
+![Original image from the paper](/imgs/scann_paper.jpg)
 
 作者认为不是所有的样本都对与量化向量有用。作者认为对于给定的向量 $q$ ，与 $x$ 内积越大，其量化误差就越有意义，如图 (a) 所示。量化的本质实际上是寻找在同空间中较少数量的向量集合描述原有向量的概率分布。向量会塌缩至临近的描述向量 / 类中心 $c$ 上。那么作者将量化误差分解成了正交分量 $r_{\perp}$ 和平行分量 $r_\parallel$, 如图 (b) 所示。同时作者指出，最近的类中心也许并不是对内积最好的描述，我们应该关注内积最接近的作为描述向量，如图 (c) 所示。
 
 原文中的图画的不是很好，有点太过抽象了。为了方便推导，我重新画了一个图：
 
-![](imgs/scann_draw.jpg)
+![](/imgs/scann_draw.jpg)
 
 看到右图，绿色是 $(x_i-\tilde{x_i})$， 蓝色是 $r_\perp$，橙色是 $r_\parallel$ 。红色的角我们记作 $\angle_{x_i, x_i-\tilde{x_i}}$。
 两个红色的角相等，我们就可以使用 $\text{cos}\angle_{x_i,x_i-\tilde{x_i}}$ 来求 $r_\parallel$ 。
@@ -160,7 +169,7 @@ $$\begin{aligned} \Big(\int_0^\alpha\sin^{\frac{d+2}{2}}\theta\sin^{\frac{d-2}{2
 
 $$\begin{aligned} 1&=\lim_{d\to\infty}\frac{\frac{(d-1)}{d}\frac{I_{d-2}}{I_d}-\frac{\cos\alpha\sin^{d-1}\alpha}{dI_d}}{\frac{(d-3)}{d-2}\frac{I_{d-4}}{I_{d-2}}-\frac{\cos\alpha\sin^{d-3}\alpha}{(d-2)I_{d-2}}}\\ 1&=\frac{\lim_{d\to\infty}\frac{(d-1)}{d}\frac{I_{d-2}}{I_d}-\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-1}\alpha}{dI_d}}{\lim_{d\to\infty}\frac{(d-3)}{d-2}\frac{I_{d-4}}{I_{d-2}}-\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-3}\alpha}{(d-2)I_{d-2}}}\\ 1&=\frac{\lim_{d\to\infty}\frac{(d-1)}{d}\frac{I_{d-2}}{I_d}-\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-1}\alpha}{dI_d}}{\lim_{d\to\infty}\frac{(d-3)}{d-2}\frac{I_{d-4}}{I_{d-2}}-\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-3}\alpha}{(d-2)I_{d-2}}}\\ 1&=\frac{1-\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-1}\alpha}{dI_d}}{1-\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-3}\alpha}{(d-2)I_{d-2}}}\\ 1&=\frac{\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-1}\alpha}{dI_d}}{\lim_{d\to\infty}\frac{\cos\alpha\sin^{d-3}\alpha}{(d-2)I_{d-2}}}\\ \end{aligned}$$
 
-![](imgs/scann_fig_1.jpg)
+![](/imgs/scann_fig_1.jpg)
 
 经过化简后，我们可以简单得到 
 
@@ -189,9 +198,9 @@ $$\min_{c_1,c_2,...,c_k\in\mathbb{R}^d}\sum_{i=1}^n\min_{\tilde{x_i}\in\{c_1,c_2
 
 ### Threshold T 对于 Recall @ R 的影响
 
-![](imgs/scann_exp_1.jpg)
-![](imgs/scann_exp_2.jpg)
-![](imgs/scann_exp_3.jpg)
-![](imgs/scann_exp_4.jpg)
+![](/imgs/scann_exp_1.jpg)
+![](/imgs/scann_exp_2.jpg)
+![](/imgs/scann_exp_3.jpg)
+![](/imgs/scann_exp_4.jpg)
 
-[返回首页](https://mpskex.github.io/index)
+[返回首页](/)

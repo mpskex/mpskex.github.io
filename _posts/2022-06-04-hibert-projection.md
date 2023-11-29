@@ -1,6 +1,16 @@
-# 凸函数与 Hilbert 投影定理
+---
+layout: post
+title:  "凸函数与 Hilbert 投影定理"
+date:   2022-06-04 14:08:00 +0800
+author: Fangrui Liu
+categories: convex-optimization
+tags: math convex-optimization
+---
+
+{% include mathjax_support.html %}
 
 本节我们会介绍凸函数和可分离定理。这是对于凸优化非常重要的基本概念。这为最优化算法可行性的判定提供了有效的依据。我个人也是觉得这部分算是容易理解并且很优雅的一节内容。
+<!--more-->
 
 ### 什么是凸函数
 
@@ -113,7 +123,7 @@ $$
 
 我们做了一个图示以方便大家理解。请大家看下图， $p$ 为点  $z$ 在集合 $C$ 的上的投影，对于在集合内的点 $c$ ，可以明显观察到 $\langle c-p, z - p\rangle\le0$ 。但是集合外的点 $c'$ 就不能满足上述条件。这样能让我们更感性地理解 Hilbert 投影定理。
 
-![Hilbert Theorem](imgs/hilbert.png)
+![Hilbert Theorem](/imgs/hilbert.png)
 
 有了这样优美的理论，我们总感觉还差点什么。就让我们引申一下，看分离定理是怎么推导的：
 
@@ -141,4 +151,4 @@ $$
 
 到这里本节的内容就结束了，下一节我们会简单介绍一下 **次梯度（Subgradient）** 的相关概念，请大家继续关注～
 
-[返回首页](https://mpskex.github.io/index)
+[返回首页](/)

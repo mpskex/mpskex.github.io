@@ -1,23 +1,30 @@
-{% if page.use_math %}
+---
+layout: post
+title:  "经典 Weierstrass 极值定理"
+date:   2022-06-02 16:08:00 +0800
+author: Fangrui Liu
+categories: convex-optimization
+tags: math convex-optimization
+---
+
 {% include mathjax_support.html %}
-{% endif %}
-# 经典 Weierstrass 极值定理
-### 基本定义与定理
 
 本节我们会介绍一些基本定义和概念，包括什么是凸函数，什么是有界、闭合、紧致。同时我们还会回顾一些连续性的相关定义，以方便我们去证明后续的一些定理。
+
+<!--more-->
+
+### 基本定义与定理
 
 1. 有界 (bounded) ：有界集合有穷的集合半径；有界集合内部的任两个点的距离都是有穷的。
 2. 闭合 (closed) ：闭合集合是有界的且边界在集合中的。
 3. 紧致 (compact) ：紧致集合是有界的且闭合的。
 4. 纯性 (proper)：纯度量空间内所有的闭合球 (closed ball) 都是紧致的。换言之，纯度量空间都是完备的(complete)。纯函数 (proper functions) 在自身非空的定义域中每个值都大于 $-\infty$ 且存在一个值小于 $\infty$。
 5. 下半连续 (lower semi-continuous) ：闭合函数都是下半连续的，反之亦然。
-    
-    $$
-    f(x)\le\lim_{k\to\infty}\inf{f(x_k)} \qquad \forall x_k\to x \text{ and } \{x_k\}\subset X
-    $$
-    
-    ![（上半连续 + 下半连续 = 连续）](imgs/lsc_demonstration.png)
-    
+
+$$f(x)\le\lim_{k\to\infty}\inf{f(x_k)} \qquad \forall x_k\to x \text{ and } \{x_k\}\subset X$$
+
+![（上半连续 + 下半连续 = 连续）](/imgs/lsc_demonstration.png)
+
 6. 强制性 (coercive) ：可以理解为是函数在轴两侧都是奔向无穷的。
 $$
 \lim_{\|x\|\to\infty}f(x)=+\infty
@@ -99,4 +106,4 @@ $$
 
 本节的内容就到这里，下一节我们会介绍凸函数，敬请期待～
 
-[返回首页](https://mpskex.github.io/index)
+[返回首页](/)
