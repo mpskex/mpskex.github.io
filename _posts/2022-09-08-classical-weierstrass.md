@@ -27,7 +27,7 @@ $$f(x)\le\lim_{k\to\infty}\inf{f(x_k)} \qquad \forall x_k\to x \text{ and } \{x_
 
 6. 强制性 (coercive) ：可以理解为是函数在轴两侧都是奔向无穷的。
 $$
-\lim_{\|x\|\to\infty}f(x)=+\infty
+\lim_{\\|x\\|\to\infty}f(x)=+\infty
 $$
 
 7. Bolzano-Weierstrass 定理：任意有界的序列都有一个收敛的自序列。
@@ -46,7 +46,7 @@ $$
 
 （*为了证明上面的声明是正确的，我们需要使用 反证法 来证明。这部分可能会有点绕）*
 
-***假设*** 上面的的声明不正确，也就是说 $(x_n)$ 没有一个有界的子序列，则 $(x_n)$ 不是有界的。根据 **强制性(coercive)** ，对于 $\|x_n\|\to\infty$，我们有 $f(x_n)\to\infty$；
+***假设*** 上面的的声明不正确，也就是说 $(x_n)$ 没有一个有界的子序列，则 $(x_n)$ 不是有界的。根据 **强制性(coercive)** ，对于 $\\|x_n\\|\to\infty$，我们有 $f(x_n)\to\infty$；
 
 又根据我们对于序列 $(x_n)$ 的定义，$f(x_n)\to\inf f(x) = \infty$；这与纯函数的定义相悖。因此 ***假设* 不成立**，原命题 $**(x_n)$ 有一个有界的子序列** 为真。
 
@@ -80,15 +80,15 @@ $$
 \end{cases} \qquad \operatorname{dom} \delta_C = C
 $$
 
-在面对指定定义域的问题时，可以结合指示函数来定义目标函数，比如 $f|_C$ 可以记作 $f+\delta_C$。同时我们可以注意到，$\delta_C$ 是一个闭合函数，
+在面对指定定义域的问题时，可以结合指示函数来定义目标函数，比如 $f\|_C$ 可以记作 $f+\delta_C$。同时我们可以注意到，$\delta_C$ 是一个闭合函数，
 
 那么现在我们终于来到了本节的大 boss：
 
-***(经典 Weierstrass 极值定理)*** 对于一个**下半连续  （lower semi-continuous）**的函数 $f:X\to(-\infty,\infty]$ 在一个**紧致**的集合 $C$ 上， $\operatorname{dom}f \cap C \ne \phi$，那么 $f|_C$ 有一个极小值。
+***(经典 Weierstrass 极值定理)*** 对于一个**下半连续  （lower semi-continuous）**的函数 $f:X\to(-\infty,\infty]$ 在一个**紧致**的集合 $C$ 上， $\operatorname{dom}f \cap C \ne \phi$，那么 $f\_C$ 有一个极小值。
 
 证明：
 
-首先我们面对由定义域的函数 $f|_C$，将其转化为 $f+\delta_C$。目标就是证明 $f+\delta_C$ 是**闭合强制的纯函数**，以利用之前证明的极值存在定理来证明这个定理。
+首先我们面对由定义域的函数 $f\|_C$，将其转化为 $f+\delta_C$。目标就是证明 $f+\delta_C$ 是**闭合强制的纯函数**，以利用之前证明的极值存在定理来证明这个定理。
 
 **（闭合性）** 因为 $f$ 和 $\delta_C$ 都是闭合函数，我们先记 $f(x)+\delta_C(x) := (f+\delta_C)(x)$，那么有 
 
@@ -98,7 +98,7 @@ $$
 
 所以我们可知 $(f+\delta_C)$ 是**下半连续**的，也就是闭合的。
 
-**（强制性）** 当 $\|x\|\to\infty$，$(f+\delta_C)(x)\to\infty$。因为集合 $C$ 是闭合且有界的，所以超出闭合定义域的值会被指示函数顶到 $\infty$。
+**（强制性）** 当 $\\|x\\|\to\infty$，$(f+\delta_C)(x)\to\infty$。因为集合 $C$ 是闭合且有界的，所以超出闭合定义域的值会被指示函数顶到 $\infty$。
 
 **（纯性）** $\operatorname{dom}(f+\delta_C) = \operatorname{dom}f \cap \operatorname{dom}\delta_C = \operatorname{dom}f + C \ne \phi$，所以纯性得到了保证。
 
@@ -106,4 +106,4 @@ $$
 
 本节的内容就到这里，下一节我们会介绍凸函数，敬请期待～
 
-[返回首页](/)
+[返回所有博客](/blog.html) ｜ [返回首页](/)

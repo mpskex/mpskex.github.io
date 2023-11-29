@@ -3,7 +3,7 @@ layout: post
 title:  "深入理解 ScaNN "
 date:   2022-12-06 18:01:07 +0800
 author: Fangrui Liu
-categories: paper-reading
+categories: vector-search
 tags: math vector-search
 ---
 
@@ -13,8 +13,8 @@ tags: math vector-search
 <!--more-->
 本片工作主要作用于 MIPS（Maximum Inner Product Search），当然我们可以把很多搜索问题都归结于最大内积搜索上。
 
-1. 最小欧氏距离搜索：$\|a-b\|^2:=\|a\|^2-2\langle a,b\rangle + \|b\|^2$
-2. 最小余弦距离搜索：$\text{cos}(\angle_{a,b})=\frac{\langle a, b\rangle}{\|a\|\|b\|}$
+1. 最小欧氏距离搜索：$\\|a-b\\|^2:=\\|a\\|^2-2\langle a,b\rangle + \\|b\\|^2$
+2. 最小余弦距离搜索：$\text{cos}(\angle_{a,b})=\frac{\langle a, b\rangle}{\\|a\\|\\|b\\|}$
 
 也就是说，如果我们提出更好的改善 MIPS 的方法，就也许有推广到更多度量上的可能。
 
@@ -48,7 +48,7 @@ $$\begin{aligned} \mathbb{E}_q\sum_{i=1}^n\Big(\langle q,x_i- \tilde{x_i}\rangle
 看到右图，绿色是 $(x_i-\tilde{x_i})$， 蓝色是 $r_\perp$，橙色是 $r_\parallel$ 。红色的角我们记作 $\angle_{x_i, x_i-\tilde{x_i}}$。
 两个红色的角相等，我们就可以使用 $\text{cos}\angle_{x_i,x_i-\tilde{x_i}}$ 来求 $r_\parallel$ 。
 
-求 $r_\parallel$ 相当于在求 $(x_i-\tilde{x_i})$ 在 $\frac{x_i}{\|x_i\|}$ 上的投影。
+求 $r_\parallel$ 相当于在求 $(x_i-\tilde{x_i})$ 在 $\frac{x_i}{\\|x_i\\|}$ 上的投影。
 那么就可以得到 
 
 $$\begin{aligned} r_\parallel &= \|x_i-\tilde{x_i}\|\text{cos}\angle_{x_i,x_i-\tilde{x_i}} \frac{x_i}{\|x_i\|}\\ &=\|x_i-\tilde{x_i}\| \frac{\langle x_i, x_i-\tilde{x_i} \rangle}{\|x_i-\tilde{x_i}\|\|x_i\|} \frac{x_i}{\|x_i\|}\\ &=\frac{\langle x_i, x_i-\tilde{x_i} \rangle x_i}{\|x_i\|^2} \end{aligned}$$
@@ -56,7 +56,9 @@ $$\begin{aligned} r_\parallel &= \|x_i-\tilde{x_i}\|\text{cos}\angle_{x_i,x_i-\t
 具体的可以参考 [Wikipedia](https://en.wikipedia.org/wiki/Vector_projection#Vector_projection_2) 。
 
 同时也不难得到，[Vector Rejection](https://en.wikipedia.org/wiki/Vector_projection#Vector_rejection_2) 也就是垂直分量为
+
 $$r_\perp=(x_i-\tilde{x_i}) - r_\parallel=(x_i-\tilde{x_i}) - \frac{\langle x_i, x_i-\tilde{x_i} \rangle x_i}{\|x_i\|^2}$$
+
 到了这里，我们就可以继续使用 $r_\parallel$ 和 $r_\perp$ 对 score-aware loss 进行推导了。
 
 
@@ -81,19 +83,19 @@ $$\begin{aligned} h_\parallel &:= (d-1)\int_0^\pi w(\|x_i\|\cos\theta)(\sin^{d-2
 
 $$\begin{aligned} \mathbb{E}_q\Big[\langle q, x-\tilde x \rangle^2 \, | \,\langle q, x\rangle=t\Big] &=\mathbb{E}_q\Big[\langle q_\parallel + q_\perp, r_\parallel(x, \tilde x) + r_\perp(x, \tilde x) \rangle^2 \, | \,\langle q, x\rangle=t\Big]\\ &=\mathbb{E}_q\Big[\big(\langle q_\parallel, r_\parallel(x, \tilde x)\rangle+\langle q_\perp, r_\perp(x, \tilde x) \rangle + 0 + 0\big)^2\, | \,\langle q, x\rangle=t\Big]\\ &=\mathbb{E}_q\Big[\langle q_\parallel, r_\parallel(x, \tilde x)\rangle^2\, | \,\langle q, x\rangle=t\Big]+\mathbb{E}_q\Big[\langle q_\perp, r_\perp(x, \tilde x) \rangle^2\, | \,\langle q, x\rangle=t\Big] + 0\\ \end{aligned}$$
 
-这里注意几个点，正交的两个向量内积为零。所以在推导过程中我故意占位了 0 来表示之前有对应的项。由于期望在 $q$ 上完成，所以我们可以把对应的 $r_\parallel(x,\tilde x)$ 和 $r_\perp(x,\tilde x)$ 当作常数从期望中拿出来。同时，由于我们已经给定了 $t:=\langle q,x\rangle$，所以不难得到 $\|q_\parallel\|:=\frac{t}{\|x\|}$​。 类似地，由于 $\|q\|^2 = \|q_\parallel\|^2 + \|q_\perp\|^2$ ，假设 $\|q\|=1$ 的情况下我们可以得到 $\|q_\perp\|=\sqrt{1-\frac{t^2}{\|x\|^2}}$​ 。另外，我们假设了 $q$ 是 $(d−1)$-球面 上均匀分布的向量，所以我们可以得到 $\mathbb{E}_q\big[\|q_\perp\|^2\big]=\frac{1-\frac{t^2}{\|x\|^2}}{d-1}$ 。因此我们整理上面公式为
+这里注意几个点，正交的两个向量内积为零。所以在推导过程中我故意占位了 0 来表示之前有对应的项。由于期望在 $q$ 上完成，所以我们可以把对应的 $r_\parallel(x,\tilde x)$ 和 $r_\perp(x,\tilde x)$ 当作常数从期望中拿出来。同时，由于我们已经给定了 $t:=\langle q,x\rangle$，所以不难得到 $\\|q_\parallel\\|:=\frac{t}{\\|x\\|}$​。 类似地，由于 $\\|q\\|^2 = \\|q_\parallel\\|^2 + \\|q_\perp\\|^2$ ，假设 $\\|q\\|=1$ 的情况下我们可以得到 $\\|q_\perp\\|=\sqrt{1-\frac{t^2}{\\|x\\|^2}}$​ 。另外，我们假设了 $q$ 是 $(d−1)$-球面 上均匀分布的向量，所以我们可以得到 $\mathbb{E}_q\big[\\|q_\perp\\|^2\big]=\frac{1-\frac{t^2}{\\|x\\|^2}}{d-1}$ 。因此我们整理上面公式为
 
 $$\text{Right} = \frac{t^2}{\|x\|^2}\Big\|r_\parallel(x,\tilde x)\Big\|^2 + \frac{1-\frac{t^2}{\|x\|^2}}{d-1}\Big\|r_\perp(x, \tilde x)\Big\|^2$$
 
-将上式代入 Score aware loss，再加入一些 $\|q\|=1$ 的特殊风味（确定了上下界）可得
+将上式代入 Score aware loss，再加入一些 $\\|q\\|=1$ 的特殊风味（确定了上下界）可得
 
 $$\begin{aligned} \mathcal{L}(x_i,\tilde{x_i},w)&=\int_{-\infty}^{\infty}w(t)\mathbb{E}_q\Big[\langle q,x_i-\tilde{x_i}\rangle^2\,|\,\langle q,x\rangle=t\Big]p\big(\langle q,x\rangle= t\big)dt\\ &=\int_{-\|x_i\|}^{\|x_i\|}w(t)\mathbb{E}_q\Big[\langle q,x_i-\tilde{x_i}\rangle^2\,|\,\langle q,x\rangle=t\Big]dP\big(\langle q,x\rangle\le t\big)\\ \end{aligned}$$
 
-我们定义 $\theta:=\arccos \frac{t}{\|x_i\|}$，所以可以得到 $t$ 的另一种表示 $t=\|x_i\|\cos\theta$ 同时也可以得到 
+我们定义 $\theta:=\arccos \frac{t}{\\|x_i\\|}$，所以可以得到 $t$ 的另一种表示 $t=\\|x_i\\|\cos\theta$ 同时也可以得到 
 
 $$\sin\theta=\sqrt{1-\cos^2\theta}=\sqrt{1-\frac{t^2}{\|x_i\|^2}}$$
 
-而上面的 $\sin\theta$ 正好是 $\|q_\perp\|$。这里我们稍微复习一下 [Hypersphere](https://en.wikipedia.org/wiki/N-sphere#Closed_forms) 的一些知识。根据积分我们可以推导得到 $d$-ball 的对应的 $(d−1)$-球面的面积为 
+而上面的 $\sin\theta$ 正好是 $\\|q_\perp\\|$。这里我们稍微复习一下 [Hypersphere](https://en.wikipedia.org/wiki/N-sphere#Closed_forms) 的一些知识。根据积分我们可以推导得到 $d$-ball 的对应的 $(d−1)$-球面的面积为 
 
 $$S_{d-1}(R)=\frac{2\pi^{\frac{d}{2}}}{\Gamma(\frac{d}{2})}R^{d-1}= S_{d-1}R^{d-1}$$
 
@@ -112,13 +114,13 @@ $$\begin{aligned} \mathcal{L}(x_i,\tilde{x_i},w)&=\int_{0}^{\pi}w(\|x_i\|\cos\th
 
 $$h_\parallel(w,\|x_i\|)\ge h_\perp(w, \|x_i\|)$$
 
-**同时当且仅当 $w(t)$ 为常数时，$h_\parallel(w,\|x_i\|)= h_\perp(w, \|x_i\|)$ 其中 $t\in\Big[-\|x_i\|,\|x_i\|\Big]$。**
+**同时当且仅当 $w(t)$ 为常数时，$h_\parallel(w,\\|x_i\\|)= h_\perp(w, \\|x_i\\|)$ 其中 $t\in\Big[-\\|x_i\\|,\\|x_i\\|\Big]$。**
 
-证明：通常地，我们在证明大小关系都会将问题转换为比例来推导。这里我们需要证明 $\frac{h_\parallel(w,\|x_i\|)}{h_\perp(w, \|x_i\|)} \ge 1$ 。我们可以列出
+证明：通常地，我们在证明大小关系都会将问题转换为比例来推导。这里我们需要证明 $\frac{h_\parallel(w,\\|x_i\\|)}{h_\perp(w, \\|x_i\\|)} \ge 1$ 。我们可以列出
 
 $$\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}} \begin{aligned}  \frac{h_\parallel(w,\|x_i\|)}{h_\perp(w, \|x_i\|)} &=\ddfrac{\int_{0}^{\pi}w(\|x_i\|\cos\theta)(1-\sin^2\theta)\theta\sin^{d-2}\theta d\theta}{\frac{1}{d-1}\int_{0}^{\pi}w(\|x_i\|\cos\theta)\sin^{d}\theta d\theta}\\  &=(d-1)\Bigg(\ddfrac{\int_{0}^{\pi}w(\|x_i\|\cos\theta)\theta\sin^{d-2}\theta d\theta}{\int_{0}^{\pi}w(\|x_i\|\cos\theta)\sin^{d}\theta d\theta} - 1\Bigg)\ge 1\\ &\Leftrightarrow \ddfrac{\int_{0}^{\pi}w(\|x_i\|\cos\theta)\theta\sin^{d-2}\theta d\theta}{\int_{0}^{\pi}w(\|x_i\|\cos\theta)\sin^{d}\theta d\theta} \ge \frac{d}{d-1} \end{aligned}$$
 
-我们不妨设 $I_d:=\int_0^\pi w(\|x_i\|\cos\theta)\sin^d\theta d\theta$ ，我们只需要证明 $\frac{I_{d-2}}{I_d}\ge\frac{d}{d-1}$​ 即可。使用分部积分法展开 $I_d$​，不难得到
+我们不妨设 $I_d:=\int_0^\pi w(\\|x_i\\|\cos\theta)\sin^d\theta d\theta$ ，我们只需要证明 $\frac{I_{d-2}}{I_d}\ge\frac{d}{d-1}$​ 即可。使用分部积分法展开 $I_d$​，不难得到
 
 $$\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}} \begin{aligned}  I_d=&-\int_0^\pi w(\|x_i\|\cos\theta)\sin^{d-1}\theta d \cos\theta\\ =&-w(\|x_i\|\cos\theta)\cos\theta\sin^{d-1}\theta\Big|^\pi_0+\int_0^\pi\cos\theta d w(\|x_i\|\cos\theta)\sin^{d-1}\theta\\ =&-w(\|x_i\|\cos\theta)\cos\theta\sin^{d-1}\theta\Big|^\pi_0\\ &+\int_0^\pi\cos\theta\Big[-w'(\|x_i\|\cos\theta)\|x_i\|\sin\theta\sin^{d-1}\theta+(d-1)w(\|x_i\|\cos\theta)\cos\theta\sin^{d-2}\theta\Big]d\theta\\ =&-w(\|x_i\|\cos\theta)\cos\theta\sin^{d-1}\theta\Big|^\pi_0\\ &-\|x_i\|\int_0^\pi w'(\|x_i\|\cos\theta)\cos\theta\sin^{d}\theta d\theta+(d-1)\int_0^\pi w(\|x_i\|\cos\theta)\cos^2\theta\sin^{d-2}\theta d\theta\\ =&-w(\|x_i\|\cos\theta)\cos\theta\sin^{d-1}\theta\Big|^\pi_0\\ &-\|x_i\|\int_0^\pi w'(\|x_i\|\cos\theta)\cos\theta\sin^{d}\theta d\theta+(d-1)\int_0^\pi w(\|x_i\|\cos\theta)(1-\sin^2\theta)\sin^{d-2}\theta d\theta \end{aligned}$$
 
@@ -138,7 +140,7 @@ $$R:=\|x_i\|\int_0^\pi w'(\|x_i\|\cos\theta)\cos\theta\sin^{d}\theta d\theta$$
 
 $$\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}} \begin{aligned}  I_d &= -R + (d-1)(I_{d-2}-I_d)\\ I_d &= -R + (d-1)I_{d-2}+(1-d)I_d\\ d I_d &= -R + (d-1)I_{d-2}\\ d &=-\frac{R}{I_d} + (d-1)\frac{I_{d-2}}{I_d}\\ \frac{d}{d-1} &=\frac{I_{d-2}}{I_d}-\frac{R}{(d-1)I_d}\\ \end{aligned}$$
 
-我们需要证明 $\frac{R}{I_d} \ge 0$， 这样就可以得到 ​$\frac{d}{d-1} \le \frac{I_{d-2}}{I_d}$ ​。在保证 $w'(t)\ge0$ ，也就是 $w$ 单调非递减的条件下，能保证 $\|x_i\|\int_0^\pi w'(\|x_i\|\cos\theta)\cos\theta\sin^{d}\theta d\theta \ge 0$ 。这样就能得到 $R\ge 0$ 的结论，同时要求 $w$ 单调非递减的同时非正值时为零。相似地，也不难证明 $I_d\ge0$ 。我们就能证明 $\frac{I_{d-2}}{I_d}\ge\frac{d}{d-1}$ 。
+我们需要证明 $\frac{R}{I_d} \ge 0$， 这样就可以得到 ​$\frac{d}{d-1} \le \frac{I_{d-2}}{I_d}$ ​。在保证 $w'(t)\ge0$ ，也就是 $w$ 单调非递减的条件下，能保证 $\\|x_i\\|\int_0^\pi w'(\\|x_i\\|\cos\theta)\cos\theta\sin^{d}\theta d\theta \ge 0$ 。这样就能得到 $R\ge 0$ 的结论，同时要求 $w$ 单调非递减的同时非正值时为零。相似地，也不难证明 $I_d\ge0$ 。我们就能证明 $\frac{I_{d-2}}{I_d}\ge\frac{d}{d-1}$ 。
 
 同时，不难发现，等值发生在 $R=0$ 的时候出现。也就是在 $w'(t)=0$ 的时候，意味着等值出现在 $w(\cdot)$ 为常数的时候。$\blacksquare$
 
@@ -149,7 +151,7 @@ $$\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}} \begin{aligne
 
 $$\begin{aligned} \mathcal{L}(x_i, \tilde{x_i}, w)&=h_\parallel(w, \|x_i\|)\Big\|r_\parallel(x_i, \tilde{x_i})\Big\|^2 + h_\perp(w, \|x_i\|)\Big\|r_\perp(x_i, \tilde{x_i})\Big\|^2\\ &\propto \eta(w, \|x_i\|)\Big\|r_\parallel(x_i, \tilde{x_i})\Big\|^2 + \Big\|r_\perp(x_i, \tilde{x_i})\Big\|^2 \end{aligned}$$
 
-其中 $\eta(w(\cdot), \|x_i\|)  := \frac{h_\parallel(w(\cdot), \|x_i\|)}{h_\perp(w(\cdot), \|x_i\|)}$​。我们可以考虑特殊情况，当 $w(t):= I(t\ge T) =  \begin{cases} 1,  &t \ge T\\ 0,  &t < T \end{cases}$ 时，有
+其中 $\eta(w(\cdot), \\|x_i\\|)  := \frac{h_\parallel(w(\cdot), \\|x_i\\|)}{h_\perp(w(\cdot), \\|x_i\\|)}$​。我们可以考虑特殊情况，当 $w(t):= I(t\ge T) =  \begin{cases} 1,  &t \ge T\\ 0,  &t < T \end{cases}$ 时，有
 
 $$\lim_{d\to\infty}\frac{\eta\Big(I(t\ge T), \|x_i\|\Big)}{d-1}=\frac{(T/\|x_i\|)^2}{1-(T/\|x_i\|)^2}$$
 
@@ -157,7 +159,7 @@ $$\lim_{d\to\infty}\frac{\eta\Big(I(t\ge T), \|x_i\|\Big)}{d-1}=\frac{(T/\|x_i\|
 
 证明：
 
-继续利用 [定理 3.3：](#定理-33)的证明中的中间结果来推理。我们不妨设 $I_d:=\int_0^\alpha \sin^d\theta d\theta$，其中 $\alpha:=\arccos\frac{T}{\|x_i\|}$, 这时 我们可以得到 $R:=\cos\alpha\sin^{d-1}\alpha$（对应之前我们消去的第一项）。因此我们有
+继续利用 [定理 3.3：](#定理-33)的证明中的中间结果来推理。我们不妨设 $I_d:=\int_0^\alpha \sin^d\theta d\theta$，其中 $\alpha:=\arccos\frac{T}{\\|x_i\\|}$, 这时 我们可以得到 $R:=\cos\alpha\sin^{d-1}\alpha$（对应之前我们消去的第一项）。因此我们有
 
 $$\begin{aligned} dI_{d}&=(d-1)I_{d-2}-\cos\alpha\sin^{d-1}\alpha\\ 1&=\frac{(d-1)}{d}\frac{I_{d-2}}{I_d}-\frac{\cos\alpha\sin^{d-1}\alpha}{dI_d}\\ \end{aligned}$$
 
@@ -175,7 +177,7 @@ $$\begin{aligned} 1&=\lim_{d\to\infty}\frac{\frac{(d-1)}{d}\frac{I_{d-2}}{I_d}-\
 
 $$\lim_{d\to\infty}\frac{(d-2)I_{d-2}}{dI_d}=\frac{1}{\sin^2\alpha}=\lim_{d\to\infty}\frac{I_{d-2}}{I_d}$$
 
-。由于 $\eta\Big(I(t\ge T), \|x_i\|\Big) = (d-1)(\frac{I_{d-2}}{I_d}-1)$，因此 
+。由于 $\eta\Big(I(t\ge T), \\|x_i\\|\Big) = (d-1)(\frac{I_{d-2}}{I_d}-1)$，因此 
 
 $$\lim_{d\to\infty}\frac{\eta\big(I(t\ge T), \|x_i\|\big)}{d-1}=\frac{1}{\sin^2\theta}-1=\frac{(T/\|x_i\|)^2}{1-(T/\|x_i\|)^2}\qquad\blacksquare$$
 
@@ -203,4 +205,4 @@ $$\min_{c_1,c_2,...,c_k\in\mathbb{R}^d}\sum_{i=1}^n\min_{\tilde{x_i}\in\{c_1,c_2
 ![](/imgs/scann_exp_3.jpg)
 ![](/imgs/scann_exp_4.jpg)
 
-[返回首页](/)
+[返回所有博客](/blog.html) ｜ [返回首页](/)

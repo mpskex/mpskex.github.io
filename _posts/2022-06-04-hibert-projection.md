@@ -61,18 +61,18 @@ tags: math convex-optimization
 ### 点到集合的投影
 
 1. 支持函数（Support function）：支持函数  $\sigma_C(y):=sup_{x\in C}\langle y,x\rangle$，经过推导我们可以知 支持函数 是闭合且凸的。支持函数可以理解为绕着集合的一个函数，描绘了集合的边界。（当然这里我有点犯懒，我会补上这部分的证明的）
-2. 支持函数的性质：（这里我们定义 $rA:=\{ra|a\in A\}$，$A+B:=\{a+b|a\in A, b\in B\}$（证明也是同上，我实在是太懒了）
+2. 支持函数的性质：（这里我们定义 $rA:=\\{ra\|a\in A\\}$，$A+B:=\\{a+b\|a\in A, b\in B\\}$（证明也是同上，我实在是太懒了）
     1. $\sigma_C(\alpha y) = \alpha\sigma_C(y)=\sigma_{\alpha C}(y)$
     2. $\sigma_C(y+z)\le\sigma_C(y)+\sigma_C(z)$
     3. $\sigma_{A+B}(y) = \sigma_A(y)+\sigma_B(y)$
-3. 集合的投影（Projection of a set）：对于一个 非空且闭合的集合 $C\subseteq X$，对于一个任意点 $z\in X$，存在一个集合内的点 $x\in C$ 满足 $\|z-x\|=d_C(z)=\inf_{c\in C}\|z-c\|$。我们把满足这一条件的点 $x$ 定义为 **集合 $C$ 的投影**，记作  $P_C(z)$。
-4. [Dr Heinz Bauschke](https://scholar.google.com.hk/citations?user=UOm9p_AAAAAJ&hl=en&oi=ao) 戏称为 CUTE 性质 🤣：（其中 $\|\cdot\|$ 为 欧几里得范数）
+3. 集合的投影（Projection of a set）：对于一个 非空且闭合的集合 $C\subseteq X$，对于一个任意点 $z\in X$，存在一个集合内的点 $x\in C$ 满足 $\\|z-x\\|=d_C(z)=\inf_{c\in C}\\|z-c\\|$。我们把满足这一条件的点 $x$ 定义为 **集合 $C$ 的投影**，记作  $P_C(z)$。
+4. [Dr Heinz Bauschke](https://scholar.google.com.hk/citations?user=UOm9p_AAAAAJ&hl=en&oi=ao) 戏称为 CUTE 性质 🤣：（其中 $\\|\cdot\\|$ 为 欧几里得范数）
     
     $$
     (\forall a\in X)(\forall b\in X)(\forall \lambda\in\mathbb{R})\\\ \|(1-\lambda)a+\lambda b\|^2+\lambda(1-\lambda)\|a-b\|^2=(1-\lambda)\|a\|^2+\lambda\|b\|^2
     $$
     
-5. 如果 $\|\cdot\|$  是 欧几里得范数，且 $C$ **为凸集合，那么 $P_C(z)$ 则是一个单点（singleton）**。
+5. 如果 $\\|\cdot\\|$  是 欧几里得范数，且 $C$ **为凸集合，那么 $P_C(z)$ 则是一个单点（singleton）**。
     
     证明：先假设集合投影 $P_C(z)$ 有两个点 $x_0,x_1$ ，则有
     
@@ -92,7 +92,7 @@ tags: math convex-optimization
     \begin{aligned}Right &= (1-\lambda)\|z-x_0\|^2+\lambda\|z-x_1\|^2-\lambda(1-\lambda)\|z-x_0-z+x_1\|^2\\&=d_C(z)-\lambda(1-\lambda)\|x_1-x_0\|^2 \end{aligned}
     $$
     
-    但是这里我们需要注意，$-\lambda(1-\lambda)\|x_1-x_0\|^2$ 是非正的。为了满足不等式  $d_C(z)\le d_C(z)-\lambda(1-\lambda)\|x_1-x_0\|^2$  只能让 $-\lambda(1-\lambda)\|x_1-x_0\|^2=0$ 。因此证明了 $x_0,x_1$ 实际上是一个点，也就证明了若集合为凸，那么集合外一点到集合的投影唯一。$\blacksquare$
+    但是这里我们需要注意，$-\lambda(1-\lambda)\\|x_1-x_0\\|^2$ 是非正的。为了满足不等式  $d_C(z)\le d_C(z)-\lambda(1-\lambda)\\|x_1-x_0\\|^2$  只能让 $-\lambda(1-\lambda)\\|x_1-x_0\\|^2=0$ 。因此证明了 $x_0,x_1$ 实际上是一个点，也就证明了若集合为凸，那么集合外一点到集合的投影唯一。$\blacksquare$
     
 
 有了上面的凸集投影唯一的性质，我们就可以很方便地得到本节的主题：Hilbert 投影定理
@@ -127,7 +127,7 @@ $$
 
 有了这样优美的理论，我们总感觉还差点什么。就让我们引申一下，看分离定理是怎么推导的：
 
-***（分离定理）***对于 $X\supseteq C \ne 0$ ，$C$ 是闭合的凸集合，点 $z\notin C$。那么， $\exists a\in X \backslash\{0\}$，$\exists\alpha\in\mathbb{R}$ ，满足 $\langle a,z\rangle>\alpha\ge\sup_{c\in C}\langle a,c\rangle$。
+***（分离定理）***对于 $X\supseteq C \ne 0$ ，$C$ 是闭合的凸集合，点 $z\notin C$。那么， $\exists a\in X \backslash\\{0\\}$，$\exists\alpha\in\mathbb{R}$ ，满足 $\langle a,z\rangle>\alpha\ge\sup_{c\in C}\langle a,c\rangle$。
 
 证明：定义 $a:=z-P_C(z)\ne0$ （因为 $z$ 不在 $C$ 中）和 $\alpha:=\langle z-P_C(z), P_C(z)\rangle\in\mathbb{R}$。 $\forall c\in C$，根据 Hilbert 投影定理，我们有
 
@@ -151,4 +151,4 @@ $$
 
 到这里本节的内容就结束了，下一节我们会简单介绍一下 **次梯度（Subgradient）** 的相关概念，请大家继续关注～
 
-[返回首页](/)
+[返回所有博客](/blog.html) ｜ [返回首页](/)

@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
 encoding: UTF-8
 markdown: kramdown
-use_math: true
+usemathjax: true
 excerpt_separator: <!--more-->
