@@ -16,7 +16,7 @@
     f(x)\le\lim_{k\to\infty}\inf{f(x_k)} \qquad \forall x_k\to x \text{ and } \{x_k\}\subset X
     $$
     
-    ![（上半连续 + 下半连续 = 连续）](https://mpskex.github.io/imgs/lsc_demonstration.png)
+    ![（上半连续 + 下半连续 = 连续）](imgs/lsc_demonstration.png)
     
 6. 强制性 (coercive) ：可以理解为是函数在轴两侧都是奔向无穷的。
 $$
