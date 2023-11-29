@@ -28,6 +28,7 @@ All Blogs [Here](blog.html)
 
 ***Vector Search in Chinese***
 
+- [向量搜索中的量化](vector-search/2023/11/20/on-quantization.html)
 - [深入理解 ScaNN ](/vector-search/2022/12/06/scann-proof.html)
 
 ***Tech Writing at MyScale***
