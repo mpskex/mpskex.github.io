@@ -88,14 +88,17 @@ $$d(x,y)\approx d\big(x, q(y)\big)$$
 
 ### [Optimized Product Quantization](https://www.cv-foundation.org/openaccess/content_cvpr_2013/papers/Ge_Optimized_Product_Quantization_2013_CVPR_paper.pdf)
 
-OPQ 顾名思义，就是可以优化的 PQ。那么本身 $K$-means 就是一个优化过程，我们还能如何加入优化呢？所以 OPQ 的作者们提出，我们可以回归一个线性参数 $R \in \mathbb{R}^{n \times n}$，把输入 $X\in \mathbb{R}^{m\times n}$ 重新映射一下。还记得我们在 $K$-means 的优化问题中把它拆解为两个步骤吗？我们在 OPQ 中 将原始向量做线性映射 X^=RX，把它再增加一个优化 R 的步骤。
+OPQ 顾名思义，就是可以优化的 PQ。那么本身 $K$-means 就是一个优化过程，我们还能如何加入优化呢？所以 OPQ 的作者们提出，我们可以回归一个线性参数 $R \in \mathbb{R}^{n \times n}$，把输入 $X\in \mathbb{R}^{m\times n}$ 重新映射一下。还记得我们在 $K$-means 的优化问题中把它拆解为两个步骤吗？我们在 OPQ 中 将原始向量做线性映射 $\hat{X}=RX$，把它再增加一个优化 $R$ 的步骤。
 
 1. 赋值（Assignment）：类似于 Expectation，先求解 $\{X'_i\}\_{i\in\{1,2,...,K\}}$​。在当前参数（中心集合 $C$）下估计前 $n$ 个的元素
 2. 更新（Update）：类似于 Minimization，求解 $C$。求解在当前 $\{X'_i\}\_{i\in\{1,2,...,K\}}$​ 下误差最小的 中心集合 $C$。
 3. 优化 $R$，使得 $\mathop{\arg \min}\_\mathcal{C}\sum_{i=0}^{K}\sum\_{x \in \hat{X'\_i}}\\|c_i - x\\|$，其中 $\hat{X'_i} = \mathop{\arg \max}\_{X'\in RX, \|X'\|=n}{\sum\_{a\in X'}\\|c_i-a\\|}$。
 
 以上是 无参数化 OPQ 的内容。那么接下来我们再说一下 参数化 OPQ 的内容。有参数化的 OPQ 假设所有的数据都是遵从高维高斯分布。作者也指出，这种参数化的方法可以帮助无参 OPQ 生成初始值。
-[Image: image.png]参数化的 OPQ 主要强调两个事情：第一个是 **Independence**；另一个是 **Balanced Subspace Variance**。那么怎么实现呢，答案是快 **使用 PCA**。
+
+![OPQ](/imgs/quant_opq.png)
+
+参数化的 OPQ 主要强调两个事情：第一个是 **Independence**；另一个是 **Balanced Subspace Variance**。那么怎么实现呢，答案是快 **使用 PCA**。
 
 论文中使用了很多引理，不是很适合读者理解。不过从感性的理解来讲，相关性实际上就是多变量分布主方向的角度。PCA 能够给你一些正交的方向，这能够在确保一部分的独立性的同时保距（正交线性变换）。而平衡的子空间方差是通过对主成分重新排序来完成的。使用经过 PCA 转正以后的数据求方差，并对维度重新排序。按照大小为每个子空间分配维度。这样能够让子空间的方差更平衡一些。防止主成分扎堆导致中心描述能力下降。
 
